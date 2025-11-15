@@ -1,0 +1,147 @@
+[gd_scene load_steps=3 format=3 uid="uid://bm5ikdnmmv1vs"]
+
+[ext_resource type="Texture2D" uid="uid://birjcuctq58st" path="res://assets/UNKNOWN.png" id="1_12ig1"]
+
+[sub_resource type="GDScript" id="GDScript_67rgx"]
+script/source = "extends Control
+
+var dimens : Vector2
+var is_fitting := true  # \"Fit\" zoom was applied. Set to false is zoom manually set.
+var is_fulled : bool # \"Full\" zoom was applied. Set to false is zoom manually set.
+
+
+func hide_lib_viewer():
+	hide()
+
+func _ready() -> void:
+	dimens = %Picture.texture.get_size()
+	_on_full_zoom_pressed.call_deferred()
+
+func set_doc(filepath:String):
+	var texture = Image.load_from_file(G.path_to(filepath))
+	dimens = texture.get_size()
+	texture = ImageTexture.create_from_image(texture)
+	%Picture.texture = texture
+	if is_fitting:
+		_on_fit_zoom_pressed.call_deferred()
+	elif is_fulled:
+		_on_full_zoom_pressed.call_deferred()
+	else:
+		_on_zoom_slide_value_changed.call_deferred(%Zoom_Slide.value)
+
+
+#region Zoom features
+func _on_zoom_slide_value_changed(value: float) -> void:
+	is_fitting = false
+	is_fulled = false
+	%Picture.custom_minimum_size = dimens * (value * 0.01)
+	%Zoom_Label.text = str(value) + \"%\"
+
+## Make image have original size, so it could be bigger than display space.
+func _on_full_zoom_pressed() -> void:
+	%Zoom_Slide.value = 100
+	is_fulled = true
+
+## Make image fit the display space, so all of it is visible.
+func _on_fit_zoom_pressed() -> void:
+	var scale_factor : Vector2 = %Scroller.size / dimens
+	var shortest = scale_factor.min_axis_index()
+	%Zoom_Slide.value = 100 * scale_factor[shortest]
+	is_fitting = true
+#endregion
+
+#region Drag to Pan
+var is_dragging : bool
+var drag_start : Vector2
+var old_scroll : Vector2
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion and is_dragging:
+		var drag_vect = drag_start - event.position + old_scroll
+		%Scroller.scroll_horizontal = drag_vect.x
+		%Scroller.scroll_vertical = drag_vect.y
+	
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_MIDDLE:
+		if event.is_pressed():
+			is_dragging = true
+			old_scroll = Vector2(%Scroller.scroll_horizontal, %Scroller.scroll_vertical)
+			drag_start = event.position
+		else:
+			is_dragging = false
+#region
+"
+
+[node name="Viewer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = SubResource("GDScript_67rgx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Scroller" type="ScrollContainer" parent="VBoxContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 4
+vertical_scroll_mode = 4
+
+[node name="Picture" type="TextureRect" parent="VBoxContainer/MarginContainer/Scroller"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(255, 255)
+layout_mode = 2
+texture = ExtResource("1_12ig1")
+expand_mode = 1
+stretch_mode = 4
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Zoom_Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Zoom: 5%"
+
+[node name="Zoom_Slide" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+min_value = 5.0
+max_value = 200.0
+value = 100.0
+allow_greater = true
+tick_count = 5
+ticks_on_borders = true
+ticks_position = 1
+
+[node name="Full_Zoom" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "FULL"
+
+[node name="Fit_Zoom" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "FIT"
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/Zoom_Slide" to="." method="_on_zoom_slide_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Full_Zoom" to="." method="_on_full_zoom_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Fit_Zoom" to="." method="_on_fit_zoom_pressed"]

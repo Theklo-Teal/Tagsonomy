@@ -1,0 +1,113 @@
+[gd_scene load_steps=7 format=3 uid="uid://caeil6cytn8st"]
+
+[ext_resource type="Script" uid="uid://bx0dhagx84mqo" path="res://Components/selected_doc_info.gd" id="1_7asjo"]
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="2_b4hyq"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fv7bd"]
+atlas = ExtResource("2_b4hyq")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bnp1a"]
+atlas = ExtResource("2_b4hyq")
+region = Rect2(64, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_maidy"]
+atlas = ExtResource("2_b4hyq")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_doihr"]
+atlas = ExtResource("2_b4hyq")
+region = Rect2(64, 0, 32, 32)
+
+[node name="Selected Doc" type="VBoxContainer" groups=["respond_select_doc"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_7asjo")
+metadata/_tab_index = 1
+
+[node name="Label" type="RichTextLabel" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+focus_mode = 2
+fit_content = true
+selection_enabled = true
+
+[node name="HBoxContainer" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="Rem" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Remove Selected Tags"
+icon = SubResource("AtlasTexture_fv7bd")
+
+[node name="Add" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Add Selected Suggestions"
+text = "Sugg."
+icon = SubResource("AtlasTexture_bnp1a")
+
+[node name="Spacer" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Set_Tag_Input" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Set Selected to Tag Input"
+icon = SubResource("AtlasTexture_maidy")
+
+[node name="Add_Tag_Input" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+tooltip_text = "Add Selected to Tag Input"
+icon = SubResource("AtlasTexture_doihr")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="FoldableContainer" type="FoldableContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+title = "Current Tags"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ScrollContainer/VBoxContainer/FoldableContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="Tag_List" type="HFlowContainer" parent="ScrollContainer/VBoxContainer/FoldableContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Sugg_Container" type="FoldableContainer" parent="ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+title = "Suggested Tags"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ScrollContainer/VBoxContainer/Sugg_Container"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="Sugg_List" type="HFlowContainer" parent="ScrollContainer/VBoxContainer/Sugg_Container/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[connection signal="pressed" from="HBoxContainer/Rem" to="." method="_on_rem_pressed"]
+[connection signal="pressed" from="HBoxContainer/Add" to="." method="_on_add_pressed"]
+[connection signal="pressed" from="HBoxContainer/Set_Tag_Input" to="." method="_on_set_tag_input_pressed"]
+[connection signal="pressed" from="HBoxContainer/Add_Tag_Input" to="." method="_on_add_tag_input_pressed"]

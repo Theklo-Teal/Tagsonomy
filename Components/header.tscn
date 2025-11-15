@@ -1,0 +1,176 @@
+[gd_scene load_steps=9 format=3 uid="uid://bmndwi76x5aq8"]
+
+[ext_resource type="Script" uid="uid://dmyvrieyixrhi" path="res://Components/header.gd" id="1_mv227"]
+[ext_resource type="Texture2D" uid="uid://b5j6r8ac653ni" path="res://assets/gogetter_logo.svg" id="2_1hbb2"]
+[ext_resource type="Script" uid="uid://s8c0ebsa8dpu" path="res://Components/AutoLineEdit/Tag_Input_Autocomplete.gd" id="3_5wic8"]
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="4_iqkuq"]
+[ext_resource type="Texture2D" uid="uid://cihonrh3gcd07" path="res://assets/paracortical_initiative.png" id="4_qguys"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ew1ls"]
+atlas = ExtResource("4_iqkuq")
+region = Rect2(0, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_msh0x"]
+atlas = ExtResource("4_iqkuq")
+region = Rect2(0, 160, 32, 32)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_qguys"]
+content_margin_left = 12.0
+content_margin_top = 2.0
+content_margin_right = 12.0
+content_margin_bottom = 8.0
+bg_color = Color(0.6542321, 0.6542321, 0.654232, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Header" type="HBoxContainer" groups=["change_tag_prompt", "respond_select_doc"]]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 66.0
+grow_horizontal = 2
+script = ExtResource("1_mv227")
+
+[node name="GridContainer" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+
+[node name="Tag_Input" type="LineEdit" parent="GridContainer"]
+unique_name_in_owner = true
+modulate = Color(0, 0.4627451, 0.8627451, 1)
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Find Docs Matching Tags"
+script = ExtResource("3_5wic8")
+metadata/_custom_type_script = "uid://bhbg26v0rhw12"
+
+[node name="Input_Mode" type="Button" parent="GridContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Filtering Docs"
+toggle_mode = true
+icon = SubResource("AtlasTexture_ew1ls")
+icon_alignment = 1
+expand_icon = true
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GridContainer"]
+layout_mode = 2
+
+[node name="Select_Folder" type="Label" parent="GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "No Folder Selected/"
+
+[node name="Select_Filename" type="LineEdit" parent="GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "No Doc Selected"
+flat = true
+
+[node name="External" type="Button" parent="GridContainer"]
+layout_mode = 2
+tooltip_text = "Open Selected Doc on External Program"
+icon = SubResource("AtlasTexture_msh0x")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Logo_Button" type="TextureButton" parent="."]
+custom_minimum_size = Vector2(44, 0)
+layout_mode = 2
+tooltip_text = "About..."
+texture_normal = ExtResource("2_1hbb2")
+stretch_mode = 5
+
+[node name="About" type="Popup" parent="."]
+oversampling_override = 1.0
+initial_position = 1
+size = Vector2i(800, 685)
+
+[node name="PanelContainer" type="PanelContainer" parent="About"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_qguys")
+
+[node name="TabContainer" type="TabContainer" parent="About/PanelContainer"]
+layout_mode = 2
+current_tab = 0
+
+[node name="About" type="HBoxContainer" parent="About/PanelContainer/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="About/PanelContainer/TabContainer/About"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="About/PanelContainer/TabContainer/About/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("2_1hbb2")
+stretch_mode = 4
+
+[node name="TextureRect2" type="TextureRect" parent="About/PanelContainer/TabContainer/About/VBoxContainer"]
+layout_mode = 2
+texture = ExtResource("4_qguys")
+expand_mode = 5
+stretch_mode = 4
+
+[node name="RichTextLabel" type="RichTextLabel" parent="About/PanelContainer/TabContainer/About"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tag-based media organizer and browser.
+By Diogo \"Vexing\" Duarte
+For Paracortical Initiative
+2025
+"
+
+[node name="Help" type="VBoxContainer" parent="About/PanelContainer/TabContainer"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="About/PanelContainer/TabContainer/Help"]
+layout_mode = 2
+bbcode_enabled = true
+text = "The Tag Input at the top can be switched between a search/filtering mode, where submitted tags are used to populate the browsers with matches. It can also be switched to editing mode where submitted tags are applied to the currently active document.
+
+To activate a document, double click on it in one of the browsers. You can right click on the Thumbnail Browser to perform an action on document under the mouse.
+
+In Filtering Mode, and tag prefixed with «-» will remove documents containing that tage. A prefix of «+» will include any document that might be containing that tag. Without a prefix, the documents matched must have the tag to be matched.
+
+In Edit Mode, the prefix «-» removes a tag from the document. Without a prefix, one of the already established tags can be added to the document. To create a novel tag, you must have the «+» prefix.
+
+The number of results per page on each browser type can changed by editing the «settings.ini» file.
+
+Pressing the X1 and X2 mouse buttons cycles between pages of a browser or the document in the Viewer.
+
+Shortcuts:
+[ul]
+[b]F1:[/b] Show Tree Browser
+[b]F2:[/b] Show Thumb Browser
+[b]F3:[/b] Show file viewer
+
+[b]F5:[/b] Switch Tag Input mode
+[b]F6:[/b] Switch Right Mouse Button Action
+[/ul]
+"
+fit_content = true
+
+[node name="Close_About" type="Button" parent="About/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 0
+text = "[X]"
+
+[connection signal="text_submitted" from="GridContainer/Tag_Input" to="." method="_on_tag_input_text_submitted" unbinds=1]
+[connection signal="toggled" from="GridContainer/Input_Mode" to="." method="_on_input_mode_toggled"]
+[connection signal="text_submitted" from="GridContainer/HBoxContainer/Select_Filename" to="." method="_on_select_filename_text_submitted"]
+[connection signal="pressed" from="GridContainer/External" to="." method="_on_external_pressed"]
+[connection signal="pressed" from="Logo_Button" to="." method="_on_logo_button_pressed"]
+[connection signal="pressed" from="About/PanelContainer/Close_About" to="." method="_on_close_about_pressed"]

@@ -1,0 +1,120 @@
+[gd_scene load_steps=8 format=3 uid="uid://vv613u1fdkeg"]
+
+[ext_resource type="Script" uid="uid://cgmtc3pjds0xp" path="res://Components/database.gd" id="1_ormab"]
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="2_q0ibd"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yp2qv"]
+atlas = ExtResource("2_q0ibd")
+region = Rect2(32, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4gy5k"]
+atlas = ExtResource("2_q0ibd")
+region = Rect2(32, 96, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vkr8j"]
+atlas = ExtResource("2_q0ibd")
+region = Rect2(0, 128, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_afyc3"]
+atlas = ExtResource("2_q0ibd")
+region = Rect2(64, 128, 32, 32)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ormab"]
+font_size = 24
+
+[node name="Database" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_ormab")
+metadata/_tab_index = 2
+
+[node name="Buttons" type="HFlowContainer" parent="."]
+layout_mode = 2
+alignment = 1
+last_wrap_alignment = 2
+
+[node name="Tog_Folder" type="Button" parent="Buttons"]
+layout_mode = 2
+text = "Toggle All"
+
+[node name="Spacer" type="Control" parent="Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Add_Folder" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Add a Folder"
+icon = SubResource("AtlasTexture_yp2qv")
+
+[node name="Rem_Folder" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Remove Selected Folders"
+icon = SubResource("AtlasTexture_4gy5k")
+
+[node name="Spacer2" type="Control" parent="Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Scan" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Scan for Documents"
+icon = SubResource("AtlasTexture_vkr8j")
+
+[node name="Cleanup" type="Button" parent="Buttons"]
+layout_mode = 2
+tooltip_text = "Cleanup Database"
+icon = SubResource("AtlasTexture_afyc3")
+
+[node name="Update_Header" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="Update_Cancel" type="Button" parent="Update_Header"]
+layout_mode = 2
+text = "Cancel"
+
+[node name="Spacer" type="Control" parent="Update_Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Warn_Mess" type="Label" parent="Update_Header"]
+layout_mode = 2
+text = "Scanning In Progress"
+label_settings = SubResource("LabelSettings_ormab")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Spacer2" type="Control" parent="Update_Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Folder_List" type="Tree" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+columns = 3
+column_titles_visible = true
+hide_root = true
+select_mode = 1
+auto_tooltip = false
+
+[node name="FileDialog" type="FileDialog" parent="."]
+oversampling_override = 1.0
+title = "Open a Directory"
+initial_position = 2
+size = Vector2i(800, 500)
+file_mode = 2
+access = 2
+hidden_files_toggle_enabled = false
+favorites_enabled = false
+recent_list_enabled = false
+
+[connection signal="pressed" from="Buttons/Tog_Folder" to="." method="_on_tog_folder_pressed"]
+[connection signal="pressed" from="Buttons/Add_Folder" to="." method="_on_add_folder_pressed"]
+[connection signal="pressed" from="Buttons/Rem_Folder" to="." method="_on_rem_folder_pressed"]
+[connection signal="pressed" from="Buttons/Scan" to="." method="_on_scan_pressed"]
+[connection signal="pressed" from="Buttons/Cleanup" to="." method="_on_cleanup_pressed"]
+[connection signal="pressed" from="Update_Header/Update_Cancel" to="." method="_on_update_cancel_pressed"]
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_file_dialog_dir_selected"]

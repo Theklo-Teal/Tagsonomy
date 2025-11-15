@@ -1,0 +1,257 @@
+[gd_scene load_steps=10 format=3 uid="uid://ijquqx654udh"]
+
+[ext_resource type="Script" uid="uid://d2nro5yt1n3u5" path="res://Components/selected_tags_info.gd" id="1_6h0mk"]
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="2_yumxb"]
+[ext_resource type="Script" uid="uid://bcug2phikt10t" path="res://Components/AutoLineEdit/Family_Autocomplete.gd" id="3_qb0ij"]
+[ext_resource type="Script" uid="uid://cd6v74pidejv1" path="res://Components/AutoLineEdit/Tag_Info_Autocomplete.gd" id="5_lsmsx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lsmsx"]
+atlas = ExtResource("2_yumxb")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7uxvy"]
+atlas = ExtResource("2_yumxb")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lumvl"]
+atlas = ExtResource("2_yumxb")
+region = Rect2(64, 96, 32, 32)
+
+[sub_resource type="GDScript" id="GDScript_qb0ij"]
+script/source = "extends FoldableContainer
+
+
+func _on_family_family_selected(family: String) -> void:
+	var color = DB.tags.get_value(\"FAMILY\", family, Color.WHITE)
+	get_node(\"VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer/Family_Color\").color = color
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6h0mk"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12532622, 0.12532622, 0.12532622, 0.7019608)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0.43519205, 0.43519235, 0.43519217, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Selected Tags Info" type="VBoxContainer" groups=["respond_select_tag"]]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_6h0mk")
+
+[node name="Tools" type="HFlowContainer" parent="."]
+layout_mode = 2
+
+[node name="Fold_All" type="Button" parent="Tools"]
+layout_mode = 2
+text = "Fold All"
+
+[node name="Deselect" type="Button" parent="Tools"]
+layout_mode = 2
+text = "Clear"
+
+[node name="Spacer" type="Control" parent="Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Set_Tag_Input" type="Button" parent="Tools"]
+layout_mode = 2
+tooltip_text = "Set These to Tag Input"
+icon = SubResource("AtlasTexture_lsmsx")
+icon_alignment = 1
+
+[node name="Add_Tag_Input" type="Button" parent="Tools"]
+layout_mode = 2
+tooltip_text = "Add These to Tag Input"
+icon = SubResource("AtlasTexture_7uxvy")
+icon_alignment = 1
+
+[node name="Spacer2" type="Control" parent="Tools"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Save_All" type="Button" parent="Tools"]
+layout_mode = 2
+tooltip_text = "Save Data on These Tags"
+icon = SubResource("AtlasTexture_lumvl")
+icon_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 2
+
+[node name="Tag_List" type="VBoxContainer" parent="ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+metadata/_tab_index = 0
+
+[node name="TEMPLATE" type="FoldableContainer" parent="ScrollContainer/Tag_List"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+title = "None"
+script = SubResource("GDScript_qb0ij")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(170, 0)
+layout_mode = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label4" type="Label" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer3"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Description:"
+horizontal_alignment = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Family" type="LineEdit" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+script = ExtResource("3_qb0ij")
+metadata/_custom_type_script = "uid://bhbg26v0rhw12"
+
+[node name="Family_Color" type="ColorPickerButton" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(32, 32)
+layout_mode = 2
+edit_alpha = false
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="New_Name" type="LineEdit" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "New Name"
+
+[node name="Description" type="TextEdit" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 12
+placeholder_text = "Description"
+wrap_mode = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer"]
+custom_minimum_size = Vector2(0, 100)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Add_Semantics" type="Button" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Edit Semantics"
+
+[node name="Semantics_List" type="RichTextLabel" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/normal_font_size = 11
+theme_override_font_sizes/bold_font_size = 11
+theme_override_font_sizes/bold_italics_font_size = 11
+theme_override_font_sizes/italics_font_size = 11
+theme_override_font_sizes/mono_font_size = 11
+bbcode_enabled = true
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label" type="Label" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+text = "Synonyms"
+
+[node name="Synonyms" type="TextEdit" parent="ScrollContainer/Tag_List/TEMPLATE/VBoxContainer/HBoxContainer2/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 11
+placeholder_text = "Synonyms"
+
+[node name="All_Tags" type="Popup" parent="."]
+transparent_bg = true
+oversampling_override = 1.0
+size = Vector2i(220, 100)
+always_on_top = true
+transparent = true
+
+[node name="PanelContainer" type="PanelContainer" parent="All_Tags"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_6h0mk")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="All_Tags/PanelContainer"]
+layout_mode = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="All_Tags/PanelContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Present_List" type="HFlowContainer" parent="All_Tags/PanelContainer/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="All_Tags/PanelContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="All_Tags/PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Find New to Add:"
+
+[node name="Search_Tags" type="LineEdit" parent="All_Tags/PanelContainer/ScrollContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+script = ExtResource("5_lsmsx")
+metadata/_custom_type_script = "uid://bhbg26v0rhw12"
+
+[node name="Absent_List" type="HFlowContainer" parent="All_Tags/PanelContainer/ScrollContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="Tools/Fold_All" to="." method="_on_fold_all_pressed"]
+[connection signal="pressed" from="Tools/Deselect" to="." method="_on_deselect_pressed"]
+[connection signal="pressed" from="Tools/Set_Tag_Input" to="." method="_on_set_tag_input_pressed"]
+[connection signal="pressed" from="Tools/Add_Tag_Input" to="." method="_on_add_tag_input_pressed"]
+[connection signal="pressed" from="Tools/Save_All" to="." method="_on_save_all_pressed"]

@@ -1,0 +1,243 @@
+[gd_scene load_steps=9 format=3 uid="uid://blgt571jlk786"]
+
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="1_ctvsk"]
+[ext_resource type="VideoStream" uid="uid://dx5o2otoj1bss" path="res://Videos/others/thousand_miles_necoarc.mp4" id="2_ctvsk"]
+
+[sub_resource type="GDScript" id="GDScript_jew56"]
+script/source = "extends Control
+
+const DEBUGGING = false
+const DISABLED = false
+
+func _ready() -> void:
+	if DEBUGGING:
+		set_doc(\"\")
+
+func hide_lib_viewer():
+	hide()
+	%Play.button_pressed = false
+	%Player.stop()
+
+func set_doc(filepath:String):
+	if DISABLED:
+		return
+	if not DEBUGGING:
+		%Player.stream = load(G.path_to(filepath))
+		%Play.button_pressed = true
+	
+	var duration = %Player.get_stream_length()
+	%Seek.value = 0
+	%Seek.max_value = duration
+	var dura_dict = Time.get_datetime_dict_from_unix_time(duration)
+	%Duration.text = \":\".join([str(dura_dict.hour).pad_zeros(2), str(dura_dict.minute).pad_zeros(2), str(dura_dict.second).pad_zeros(2)])
+	
+	var video_texture : Texture2D = %Player.get_video_texture()
+	video_size = video_texture.get_size()
+	%video_panel/Control.ratio = video_size.aspect()
+	_on_expand_toggled(%Expand.button_pressed)
+
+
+var video_size : Vector2
+func _on_expand_toggled(toggled_on: bool) -> void:
+	var long_axis = video_size.max_axis_index()
+	var too_big = video_size[long_axis] > size[long_axis]
+	%Expand.disabled = too_big
+	%Player.expand = too_big or toggled_on
+
+func _on_play_toggled(toggled_on: bool) -> void:
+	%Play.text = [\"Paused\", \"Playing\"][int(toggled_on)]
+	if toggled_on:
+		if not %Player.is_playing():
+			%Player.play()
+	%Player.paused = not toggled_on
+
+func _on_home_pressed() -> void:
+	%Player.stream_position = 0
+	%Seek.value = 0
+	%Seek_Label.text = \"00:00:00\"
+
+func _on_loop_toggled(toggled_on: bool) -> void:
+	%Player.loop = toggled_on
+
+func _on_player_finished() -> void:
+	_on_home_pressed()
+	%Play.button_pressed = false
+
+
+func _process(_delta: float) -> void:
+	if %Player.is_playing() and not %Player.paused and not inhibit_seek:
+		%Seek.value = %Player.stream_position
+		var seek_dict = Time.get_datetime_dict_from_unix_time(%Player.stream_position)
+		%Seek_Label.text = \":\".join([str(seek_dict.hour).pad_zeros(2), str(seek_dict.minute).pad_zeros(2), str(seek_dict.second).pad_zeros(2)])
+
+var inhibit_seek := false
+func _on_seek_drag_started() -> void:
+	inhibit_seek = true
+
+func _on_seek_drag_ended(value_changed: bool) -> void:
+	inhibit_seek = false
+	if value_changed:
+		%Player.stream_position = %Seek.value
+
+
+func _on_audio_drag_ended(value_changed: bool) -> void:
+	if value_changed:
+		%Player.volume = %Audio.value * 0.01
+"
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fxar7"]
+atlas = ExtResource("1_ctvsk")
+region = Rect2(32, 160, 32, 32)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3s6tx"]
+atlas = ExtResource("1_ctvsk")
+region = Rect2(64, 160, 32, 32)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ae4jf"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+expand_margin_top = 6.0
+expand_margin_bottom = 6.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0t34e"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(1, 1, 1, 0.4)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 6
+expand_margin_top = 4.0
+expand_margin_bottom = 4.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_csvua"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[node name="Viewer" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_jew56")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+clip_contents = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Seek_Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "00:00"
+
+[node name="Seek" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Duration" type="Label" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "00:00"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="Home" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "<<"
+
+[node name="Play" type="Button" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+toggle_mode = true
+text = "Paused"
+
+[node name="Loop" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+toggle_mode = true
+button_pressed = true
+text = "Loop"
+
+[node name="Spacer" type="Control" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Expand" type="CheckButton" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+button_pressed = true
+icon = SubResource("AtlasTexture_fxar7")
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+texture = SubResource("AtlasTexture_3s6tx")
+
+[node name="Audio" type="HSlider" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_constants/grabber_offset = 0
+theme_override_styles/slider = SubResource("StyleBoxFlat_ae4jf")
+theme_override_styles/grabber_area = SubResource("StyleBoxFlat_0t34e")
+value = 100.0
+
+[node name="video_panel" type="PanelContainer" parent="VBoxContainer"]
+unique_name_in_owner = true
+clip_contents = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_csvua")
+
+[node name="Control" type="AspectRatioContainer" parent="VBoxContainer/video_panel"]
+layout_mode = 2
+alignment_vertical = 0
+
+[node name="Player" type="VideoStreamPlayer" parent="VBoxContainer/video_panel/Control"]
+unique_name_in_owner = true
+layout_mode = 2
+stream = ExtResource("2_ctvsk")
+paused = true
+expand = true
+loop = true
+
+[connection signal="drag_ended" from="VBoxContainer/HBoxContainer/Seek" to="." method="_on_seek_drag_ended"]
+[connection signal="drag_started" from="VBoxContainer/HBoxContainer/Seek" to="." method="_on_seek_drag_started"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer2/Home" to="." method="_on_home_pressed"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/Play" to="." method="_on_play_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/Loop" to="." method="_on_loop_toggled"]
+[connection signal="toggled" from="VBoxContainer/HBoxContainer2/Expand" to="." method="_on_expand_toggled"]
+[connection signal="drag_ended" from="VBoxContainer/HBoxContainer2/Audio" to="." method="_on_audio_drag_ended"]
+[connection signal="finished" from="VBoxContainer/video_panel/Control/Player" to="." method="_on_player_finished"]

@@ -1,0 +1,56 @@
+[gd_scene load_steps=4 format=3 uid="uid://ci4o6x5f4goo1"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0lfg1"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.14901961)
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 5
+border_color = Color(0.20152655, 0.20152661, 0.20152643, 1)
+border_blend = true
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7v005"]
+content_margin_left = 4.0
+content_margin_top = 0.0
+content_margin_right = 4.0
+content_margin_bottom = 0.0
+bg_color = Color(0, 0, 0, 0.3882353)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.80049086, 0.80049074, 0.80049074, 1)
+border_blend = true
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="GDScript" id="GDScript_0lfg1"]
+resource_name = "tag_element"
+script/source = "extends Button
+
+func set_tag(tag:String):
+	var tag_color = DB.tags.get_value(tag, \"family\", \"Meta\")
+	tag_color = DB.tags.get_value(\"FAMILY\", tag_color, Color.WHITE) as Color
+	set(\"theme_override_colors/font_color\", tag_color)
+	set(\"theme_override_colors/font_pressed_color\", tag_color.lightened(0.5))
+	text = tag
+"
+
+[node name="TagElement" type="Button"]
+focus_mode = 0
+theme_override_constants/outline_size = 4
+theme_override_styles/normal = SubResource("StyleBoxFlat_0lfg1")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_7v005")
+text = "[TAG]"
+script = SubResource("GDScript_0lfg1")

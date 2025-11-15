@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://00ambyeqi5hl"]
+
+[ext_resource type="StyleBox" uid="uid://ceutaqmouehea" path="res://Components/format_lib/thumbnail_static_mouse_off.tres" id="1_2kc7g"]
+[ext_resource type="Texture2D" uid="uid://pjr43qqa1t4r" path="res://assets/MISSING.png" id="2_ufhf0"]
+[ext_resource type="Script" uid="uid://daq38oeejag6k" path="res://Components/format_lib/thumbnail.gd" id="2_vnrwk"]
+
+[node name="Thumbnail" type="PanelContainer" groups=["respond_select_doc"]]
+theme_override_styles/panel = ExtResource("1_2kc7g")
+script = ExtResource("2_vnrwk")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Favorite" type="ColorRect" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(26, 26)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.24705882, 0.24705882, 0.24705882, 1)
+
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer/VBoxContainer/Favorite"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -12.0
+offset_top = -12.0
+offset_right = 12.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Format" type="ColorRect" parent="HBoxContainer/VBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+color = Color(0.24705882, 0.24705882, 0.24705882, 1)
+
+[node name="TextureRect" type="TextureRect" parent="HBoxContainer"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(40, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+texture = ExtResource("2_ufhf0")
+expand_mode = 5
+stretch_mode = 5

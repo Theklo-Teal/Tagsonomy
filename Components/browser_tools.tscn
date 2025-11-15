@@ -1,0 +1,106 @@
+[gd_scene load_steps=5 format=3 uid="uid://cnj1ufs4hj8x4"]
+
+[ext_resource type="Script" uid="uid://dcoxm241agxje" path="res://Components/browser_tools.gd" id="1_8m3tc"]
+[ext_resource type="Texture2D" uid="uid://cduto1qvyet63" path="res://assets/ui_icons.png" id="2_vj6on"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vrluu"]
+atlas = ExtResource("2_vj6on")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4x41l"]
+atlas = ExtResource("2_vj6on")
+region = Rect2(32, 96, 32, 32)
+
+[node name="Browser_Tools" type="VBoxContainer"]
+anchors_preset = -1
+anchor_right = 1.0
+offset_bottom = 89.0
+grow_horizontal = 2
+script = ExtResource("1_8m3tc")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "Checked:"
+horizontal_alignment = 1
+
+[node name="Add_Fav" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Toggle Favorite on Checked Docs"
+icon = SubResource("AtlasTexture_vrluu")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Trash" type="Button" parent="HBoxContainer"]
+custom_minimum_size = Vector2(32, 0)
+layout_mode = 2
+tooltip_text = "Checked Tags to the Trash Bin"
+icon = SubResource("AtlasTexture_4x41l")
+icon_alignment = 1
+expand_icon = true
+
+[node name="Spacer" type="Control" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Label2" type="Label" parent="HBoxContainer"]
+layout_mode = 2
+text = "RMB Action:"
+horizontal_alignment = 1
+
+[node name="mouse_mode" type="Button" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Open in Viewer"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="uncheck" type="Button" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Uncheck All"
+
+[node name="zoom_label" type="Label" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Icon Size: 32px"
+horizontal_alignment = 1
+vertical_alignment = 2
+
+[node name="zoom" type="HSlider" parent="HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+min_value = 32.0
+max_value = 92.0
+step = 12.0
+value = 32.0
+scrollable = false
+tick_count = 6
+ticks_on_borders = true
+ticks_position = 3
+
+[node name="CheckButton" type="CheckButton" parent="HBoxContainer2"]
+layout_mode = 2
+text = "Ascend"
+
+[node name="OptionButton" type="OptionButton" parent="HBoxContainer2"]
+layout_mode = 2
+selected = 0
+item_count = 3
+popup/item_0/text = "Alphabetic"
+popup/item_0/id = 1
+popup/item_1/text = "File Size"
+popup/item_1/id = 0
+popup/item_2/text = "Mod. Date"
+popup/item_2/id = 2
+
+[connection signal="pressed" from="HBoxContainer/Add_Fav" to="." method="_on_fav_pressed"]
+[connection signal="pressed" from="HBoxContainer/Trash" to="." method="_on_trash_pressed"]
+[connection signal="pressed" from="HBoxContainer/mouse_mode" to="." method="_on_mouse_mode_pressed"]
+[connection signal="pressed" from="HBoxContainer2/uncheck" to="." method="_on_uncheck_pressed"]
+[connection signal="drag_ended" from="HBoxContainer2/zoom" to="." method="_on_zoom_drag_ended"]
