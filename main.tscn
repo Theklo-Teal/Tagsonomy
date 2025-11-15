@@ -1,0 +1,153 @@
+[gd_scene load_steps=11 format=3 uid="uid://dhlthyefa8qg8"]
+
+[ext_resource type="Script" uid="uid://upwn06c5pmon" path="res://main.gd" id="1_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://bmndwi76x5aq8" path="res://Components/header.tscn" id="1_ig7tw"]
+[ext_resource type="PackedScene" uid="uid://cxj72pj6vqkc3" path="res://Components/tree_browser.tscn" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://vv613u1fdkeg" path="res://Components/database.tscn" id="3_h2yge"]
+[ext_resource type="PackedScene" uid="uid://cl11le41kcpc" path="res://Components/matches_sidebar.tscn" id="3_lquwl"]
+[ext_resource type="PackedScene" uid="uid://cnj1ufs4hj8x4" path="res://Components/browser_tools.tscn" id="4_272bh"]
+[ext_resource type="PackedScene" uid="uid://gms562wjmlbl" path="res://Components/thumb_browser.tscn" id="5_7mycd"]
+[ext_resource type="PackedScene" uid="uid://caeil6cytn8st" path="res://Components/selected_doc_info.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://ijquqx654udh" path="res://Components/selected_tags_info.tscn" id="7_kek77"]
+
+[sub_resource type="GDScript" id="GDScript_5vw27"]
+resource_name = "Viewer_Tab"
+script/source = "extends VBoxContainer
+
+var viewers : Dictionary[String, Control]
+
+func _ready() -> void:
+	for method in G.doc_libs:
+		viewers[method] = G.doc_libs[method].get_viewer()
+		add_child(viewers[method])
+		viewers[method].set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		viewers[method].size_flags_vertical = Control.SIZE_EXPAND_FILL
+		viewers[method].hide()
+
+func back_button_pressed():
+	G.select_doc_index(G.selected_index - 1)
+func front_button_pressed():
+	G.select_doc_index(G.selected_index + 1)
+
+func _on_selected_doc():
+	%Doc_Num.set_value_no_signal(G.selected_index)
+	var doc_type = G.get_doc_type(G.selected_doc)
+	for each in viewers.values():
+		if each.visible == true:
+			each.hide_lib_viewer()
+			break
+	viewers[doc_type].show()
+	viewers[doc_type].set_doc(G.selected_doc)
+
+func _on_filter_update():
+	%Doc_Num.max_value = G.matching_docs.size() - 1
+
+
+func _on_doc_num_value_changed(value: float) -> void:
+	G.select_doc_index(floori(value))
+	get_tree().call_group(\"respond_select_doc\", \"_on_selected_doc\")
+"
+
+[node name="Main" type="Node"]
+script = ExtResource("1_0xm2m")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 12
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="Header" parent="MarginContainer/VBoxContainer" instance=ExtResource("1_ig7tw")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Sidebar_SplitContainer" type="HSplitContainer" parent="MarginContainer/VBoxContainer/HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Matches" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer" instance=ExtResource("3_lquwl")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer"]
+layout_mode = 2
+
+[node name="Browser_Tools" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer" instance=ExtResource("4_272bh")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Browser" type="TabContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tab_alignment = 2
+current_tab = 2
+tabs_position = 1
+tab_focus_mode = 0
+
+[node name="Tree" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser" instance=ExtResource("3_1bvp3")]
+visible = false
+layout_mode = 2
+
+[node name="Thumb" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser" instance=ExtResource("5_7mycd")]
+visible = false
+layout_mode = 2
+
+[node name="Viewer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser" groups=["Browser", "respond_select_doc"]]
+layout_mode = 2
+script = SubResource("GDScript_5vw27")
+metadata/_tab_index = 2
+
+[node name="Tools" type="HFlowContainer" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser/Viewer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser/Viewer/Tools"]
+layout_mode = 2
+text = "Doc #:"
+
+[node name="Doc_Num" type="SpinBox" parent="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser/Viewer/Tools" groups=["Browser"]]
+unique_name_in_owner = true
+layout_mode = 2
+rounded = true
+
+[node name="Info" type="TabContainer" parent="MarginContainer/VBoxContainer/HSplitContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+tab_alignment = 1
+current_tab = 2
+tabs_position = 1
+tab_focus_mode = 0
+
+[node name="Selected Tags" parent="MarginContainer/VBoxContainer/HSplitContainer/Info" instance=ExtResource("7_kek77")]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="Selected Doc" parent="MarginContainer/VBoxContainer/HSplitContainer/Info" instance=ExtResource("7_5vw27")]
+visible = false
+layout_mode = 2
+
+[node name="Database" parent="MarginContainer/VBoxContainer/HSplitContainer/Info" instance=ExtResource("3_h2yge")]
+unique_name_in_owner = true
+layout_mode = 2
+
+[connection signal="drag_ended" from="MarginContainer/VBoxContainer/HSplitContainer" to="." method="_on_h_split_container_drag_ended" flags=18]
+[connection signal="drag_ended" from="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer" to="." method="_on_sidebar_split_container_drag_ended" flags=18]
+[connection signal="value_changed" from="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser/Viewer/Tools/Doc_Num" to="MarginContainer/VBoxContainer/HSplitContainer/Sidebar_SplitContainer/VBoxContainer/Browser/Viewer" method="_on_doc_num_value_changed"]

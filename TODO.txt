@@ -1,0 +1,34 @@
+-Use vapoursynth instead of FFMpeg directly in Bash
+
+IN EDITOR
+-Video Viewer, once EIRTeam fixes addon
+-Rename "doc_lib" with "doc_method"
+
+-Similarity Algorithm
+-(Fixed?) Current Page is reseting when changing to viewer and adding tags to docs.
+-Do Browsers highlight the doc selected by other browsers of the viewer through «_on_selected_doc()»?
+-Applying filter doesn't reset page number to 1
+
+-Improved "About" panel
+-Sorting on Browsers
+-Cleanup Database:
+	-remove database entries which doc path doesn't point to a file. (Probably removed files/docs)
+	-delete thumbnails for which there is not doc path in DB
+	-delete tag info and alias not mentioned in DB.docs
+	-reconstruct "tag_hash" entries
+	-reconstruct "synon" entries
+	-automatically add "repeated" tag to files with the same filename or same hash.
+
+-Scanning files gets the content hashes which should be checked to account for files moving folders, in which case it only updates the file path in the database.
+
+-Tag Info doesn't change family color for all tags on the list
+-Add Folder directory is expanded absolute in editor
+
+ON EXPORT
+
+-Tag Renaming Still not fixed?
+
+
+THE FUTURE:
+-Refactor database tab once we figure out Tree nodes better
+-Find the current page that shows the same results when switching browser tabs

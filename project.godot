@@ -1,0 +1,48 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Tagsonomy"
+config/tags=PackedStringArray("app")
+run/main_scene="uid://dhlthyefa8qg8"
+config/features=PackedStringArray("4.5", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+G="*res://Globals.gd"
+DB="*res://Database.gd"
+
+[display]
+
+window/size/viewport_width=1200
+window/size/viewport_height=700
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/gde_gozen/plugin.cfg")
+
+[file_customization]
+
+folder_colors={
+"res://Components/": "teal",
+"res://Database/": "teal",
+"res://Pictures/": "orange",
+"res://Thumbnails/": "yellow",
+"res://Videos/": "orange"
+}
+
+[global_group]
+
+respond_select_doc="Does something when a doc is selected."
+Browser="This is Browser type"
+respond_select_tag=""
+change_tag_prompt=""
