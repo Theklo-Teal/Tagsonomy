@@ -1,10 +1,12 @@
 -Use vapoursynth instead of FFMpeg directly in Bash
+-The bash script that creates thumbnails for videos only works with MP4 files. Failed with WEBM and OGV.
 
 IN EDITOR
--Video Viewer, once EIRTeam fixes addon
--Rename "doc_lib" with "doc_method"
+-Rename "doc_lib" to "doc_method"
 
--Similarity Algorithm
+-Better Similarity Algorithm:
+	https://en.wikipedia.org/wiki/Approximate_string_matching
+	https://www.datacamp.com/tutorial/fuzzy-string-python?dc_referrer=https%3A%2F%2Fduckduckgo.com%2F
 -(Fixed?) Current Page is reseting when changing to viewer and adding tags to docs.
 -Do Browsers highlight the doc selected by other browsers of the viewer through «_on_selected_doc()»?
 -Applying filter doesn't reset page number to 1
@@ -13,8 +15,8 @@ IN EDITOR
 -Sorting on Browsers
 -Cleanup Database:
 	-remove database entries which doc path doesn't point to a file. (Probably removed files/docs)
-	-delete thumbnails for which there is not doc path in DB
 	-delete tag info and alias not mentioned in DB.docs
+	-delete thumbnails for which there is no doc path in DB
 	-reconstruct "tag_hash" entries
 	-reconstruct "synon" entries
 	-automatically add "repeated" tag to files with the same filename or same hash.
