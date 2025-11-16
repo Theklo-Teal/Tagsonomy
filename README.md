@@ -11,7 +11,7 @@ Includes the FFMpeg plugin by EIRTeam.
 # DESCRIPTION
 A media file organizer that allows you to associate tags to the files to then search them more easily, much like Danbooru.
 This is part of my collection of projects in indefinite hiatus. I release it publicly in case someone likes the ideas and wants to develop them further or volunteers to work with me on them.
-See "WHY IN HIATUS?" for more information.
+See "![WHY IN HIATUS?](#WHY-IN-HIATUS?)" for more information.
 
 # THE CONCEPT
 Yeah, not much to it. I just like the idea of searching files by tag, especially when there is a collection of a lot of them and they are named poorly.
